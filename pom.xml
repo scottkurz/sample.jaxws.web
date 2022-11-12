@@ -26,21 +26,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        
-        <packaging.type>minify,runnable</packaging.type>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>usr-package</id>
-            <properties>
-                <packaging.type>usr</packaging.type>
-            </properties>
-        </profile>
-    </profiles>
-
-    <dependencies>
-        
+    <dependencies>       
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-client</artifactId>
@@ -73,7 +61,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
@@ -81,55 +69,26 @@
             </plugin>
             
             <plugin>
-                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>2.6.3</version>
+                <version>3.7.1</version>
                 <configuration>
                     <assemblyArtifact>
                         <groupId>com.ibm.websphere.appserver.runtime</groupId>
                         <artifactId>wlp-javaee7</artifactId>
-                        <version>17.0.0.2</version>
+                        <version>21.0.0.9</version>
                         <type>zip</type>
                     </assemblyArtifact>
+                    <!--
                     <configFile>src/main/liberty/config/server.xml</configFile>
                     <include>${packaging.type}</include>
                     <installAppPackages>project</installAppPackages>
                     <looseApplication>true</looseApplication>
+                    -->
                     <bootstrapProperties>
                         <appLocation>${project.build.finalName}.war</appLocation>
                     </bootstrapProperties>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>stop-server-before-clean</id>
-                        <phase>pre-clean</phase>
-                        <goals>
-                            <goal>stop-server</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>create-server</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>install-server</goal>
-                            <goal>create-server</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>install-apps</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>install-apps</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>package-server</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package-server</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
